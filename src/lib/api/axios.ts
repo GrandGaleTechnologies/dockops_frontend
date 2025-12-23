@@ -1,6 +1,6 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || 'https://api-docops.up.railway.app';
+const API_URL = import.meta.env.VITE_API_URL || 'https://api-dockops.aerialprospex.com';
 
 // Create axios instance
 export const apiClient = axios.create({
