@@ -12,7 +12,10 @@ const Projects = () => {
 		<div className="min-h-screen bg-background">
 			<Header />
 			<div className="container mx-auto px-4 py-8 space-y-8">
-				<div className="flex justify-end">
+				<div className="flex justify-between items-center">
+					<div className='text-2xl font-bold text-white'>
+						<h2>Projects</h2>
+					</div>
 					<Button
 						onClick={() => setIsCreateModalOpen(true)}
 						className="bg-primary hover:bg-primary/90"

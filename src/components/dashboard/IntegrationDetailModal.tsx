@@ -148,7 +148,7 @@ export function IntegrationDetailModal({
                       <label className="text-sm font-medium text-muted-foreground">
                         {formatConfigKey(key)}
                       </label>
-                      <p className="mt-1 text-sm font-mono break-all bg-muted/50 p-2 rounded-md">
+                      <p className="mt-1 text-sm font-mono break-all bg-muted/50 p-2 rounded-xl">
                         {String(value)}
                       </p>
                     </div>

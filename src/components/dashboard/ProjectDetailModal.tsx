@@ -42,7 +42,7 @@ export function ProjectDetailModal({ projectId, open, onOpenChange }: ProjectDet
         )}
 
         {error && (
-          <div className="bg-red-500/20 border border-red-500/50 rounded-lg p-4 text-red-400 text-sm">
+          <div className="bg-red-500/20 border border-red-500/50 rounded-2xl p-4 text-red-400 text-sm">
             Failed to load project details. Please try again.
           </div>
         )}

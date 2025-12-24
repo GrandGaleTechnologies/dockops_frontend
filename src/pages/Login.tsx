@@ -52,7 +52,7 @@ const Login = () => {
 
 					{/* Error Message */}
 					{error && (
-						<div className="mb-4 p-3 bg-red-500/20 border border-red-500/50 rounded-lg text-red-400 text-sm">
+						<div className="mb-4 p-3 bg-red-500/20 border border-red-500/50 rounded-2xl text-red-400 text-sm">
 							{error}
 						</div>
 					)}
@@ -123,7 +123,7 @@ const Login = () => {
 						<Button
 							type="submit"
 							disabled={isLoading}
-							className="w-full bg-primary hover:bg-[#ff9500] text-white font-bold py-2.5 sm:py-2 rounded-lg transition-colors mt-2 sm:mt-4 md:mt-5 disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
+							className="w-full bg-primary hover:bg-[#ff9500] text-white font-bold py-2.5 sm:py-2 transition-colors mt-2 sm:mt-4 md:mt-5 disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
 						>
 							{isLoading ? 'Signing in...' : 'Sign In'}
 						</Button>
