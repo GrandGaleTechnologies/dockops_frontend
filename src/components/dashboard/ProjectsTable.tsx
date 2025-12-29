@@ -33,6 +33,7 @@ import { Button } from '../ui/button';
 import { formatDate } from 'date-fns';
 import { useNavigate } from 'react-router';
 import { CreateProjectModal } from './CreateProjectModal';
+import { ManageIntegrationsModal } from './ManageIntegrationsModal';
 import { getProjectStatusBadge } from '@/lib/projectUtils';
 import type { Project } from '@/lib/api/projects';
 import {
@@ -63,6 +64,8 @@ export function ProjectsTable({ defaultPageSize = 10 }: ProjectsTableProps) {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [deleteProjectId, setDeleteProjectId] = useState<number | null>(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [manageIntegrationsProject, setManageIntegrationsProject] = useState<Project | null>(null);
+  const [isManageIntegrationsModalOpen, setIsManageIntegrationsModalOpen] = useState(false);
 
   // Build query parameters
   const queryParams = useMemo(() => {
@@ -272,7 +275,14 @@ return (
                               >
                                 {project.status === 'active' ? 'Deactivate' : 'Activate'}
                               </DropdownMenuItem>
-                              <DropdownMenuItem>Manage Integrations</DropdownMenuItem>
+                              <DropdownMenuItem
+                                onClick={() => {
+                                  setManageIntegrationsProject(project);
+                                  setIsManageIntegrationsModalOpen(true);
+                                }}
+                              >
+                                Manage Integrations
+                              </DropdownMenuItem>
                               <DropdownMenuItem
                                 className="text-red-500"
                                 onClick={() => {
@@ -412,6 +422,20 @@ return (
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {manageIntegrationsProject && (
+        <ManageIntegrationsModal
+          open={isManageIntegrationsModalOpen}
+          onOpenChange={(open) => {
+            setIsManageIntegrationsModalOpen(open);
+            if (!open) {
+              setManageIntegrationsProject(null);
+            }
+          }}
+          projectId={manageIntegrationsProject.id}
+          projectName={manageIntegrationsProject.name}
+        />
+      )}
     </Card>
   );
 }
