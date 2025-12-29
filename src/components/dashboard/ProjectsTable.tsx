@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import {
 Table,
 TableBody,
@@ -25,9 +25,9 @@ PaginationLink,
 PaginationNext,
 PaginationPrevious,
 } from '@/components/ui/pagination';
-import { Badge } from '@/components/ui/badge';
+import { LabeledSwitch } from '@/components/ui/labeled-switch';
 import { MoreVertical, Search } from 'lucide-react';
-import { useProjects, useUpdateProjectStatus, useDeleteProject } from '@/lib/api/projects';
+import { useProjects, useUpdateProjectStatus, useDeleteProject, useUpdateProject } from '@/lib/api/projects';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../ui/dropdown-menu';
 import { Button } from '../ui/button';
 import { formatDate } from 'date-fns';
@@ -53,7 +53,7 @@ interface ProjectsTableProps {
   defaultPageSize?: number;
 }
 
-export function ProjectsTable({ title = 'Projects', defaultPageSize = 10 }: ProjectsTableProps) {
+export function ProjectsTable({ defaultPageSize = 10 }: ProjectsTableProps) {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
@@ -91,6 +91,7 @@ export function ProjectsTable({ title = 'Projects', defaultPageSize = 10 }: Proj
 
   const { data, isLoading, error } = useProjects(queryParams);
   const updateStatusMutation = useUpdateProjectStatus();
+  const updateProjectMutation = useUpdateProject();
   const deleteProjectMutation = useDeleteProject();
 
   const handleSearchChange = (value: string) => {
@@ -127,7 +128,6 @@ export function ProjectsTable({ title = 'Projects', defaultPageSize = 10 }: Proj
 return (
     <Card className="bg-card rounded-2xl border border-border">
       <CardHeader>
-        <CardTitle>{title}</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="flex justify-between items-center gap-4">
@@ -143,7 +143,7 @@ return (
 
           <div className="flex gap-2">
             <Select value={autoSyncFilter === undefined ? 'all' : String(autoSyncFilter)} onValueChange={handleAutoSyncFilterChange}>
-              <SelectTrigger className="w-[140px] bg-card rounded-full border border-border">
+              <SelectTrigger className="w-[140px] bg-card rounded-lg border border-border">
                 <SelectValue placeholder="Auto Sync" />
               </SelectTrigger>
               <SelectContent>
@@ -154,7 +154,7 @@ return (
             </Select>
 
             <Select value={sortBy} onValueChange={(value) => setSortBy(value as SortOption)}>
-              <SelectTrigger className="w-[140px] bg-card rounded-full border border-border">
+              <SelectTrigger className="w-[140px] bg-card rounded-lg border border-border">
                 <SelectValue placeholder="Sort" />
               </SelectTrigger>
               <SelectContent>
@@ -170,23 +170,23 @@ return (
         )}
 
         {error && (
-          <div className="bg-red-500/20 border border-red-500/50 rounded-lg p-4 text-red-400 text-sm min-h-[350px] flex items-center justify-center">
+          <div className="bg-red-500/20 border border-red-500/50 rounded-2xl p-4 text-red-400 text-sm min-h-[350px] flex items-center justify-center">
             Failed to load projects. Please try again.
           </div>
         )}
 
         {!isLoading && !error && (
           <>
-            <div className="rounded-md border">
+            <div className="rounded-2xl border">
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>ID</TableHead>
-                    <TableHead>Project</TableHead>
+                    <TableHead className='min-w-[40px]'>ID</TableHead>
+                    <TableHead>Project Name</TableHead>
                     <TableHead>Status</TableHead>
-                    <TableHead>Auto Sync</TableHead>
                     <TableHead>File Count</TableHead>
                     <TableHead>Created at</TableHead>
+                    <TableHead>Auto Sync</TableHead>
                     <TableHead>Actions</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -200,7 +200,7 @@ return (
                   ) : (
                     data?.data.map((project) => (
                       <TableRow key={project.id}>
-                        <TableCell className="font-mono text-sm">{project.id}</TableCell>
+                        <TableCell className="font-mono text-sm min-w-[40px]">{project.id}</TableCell>
                         <TableCell>
                           <div>
                             <div className="font-medium">{project.name}</div>
@@ -212,24 +212,35 @@ return (
                           </div>
                         </TableCell>
                         <TableCell>{getProjectStatusBadge(project.status)}</TableCell>
-                        <TableCell>
-                          {project.auto_sync === null ? (
-                            <span className="text-muted-foreground">—</span>
-                          ) : project.auto_sync ? (
-                            <Badge variant="outline" className="bg-green-500/20 text-green-400 border-green-500/50">
-                              On
-                            </Badge>
-                          ) : (
-                            <Badge variant="outline" className="bg-slate-500/20 text-slate-300 border-slate-500/50">
-                              Off
-  </Badge>
-                          )}
-                        </TableCell>
                         <TableCell>{project.file_count.toLocaleString()}</TableCell>
                         <TableCell>{formatDate(project.created_at, 'dd/MM/yyyy HH:mm')}</TableCell>
+                         <TableCell>
+                          {project.auto_sync === null ? (
+                            <span className="text-muted-foreground">—</span>
+                          ) : (
+                            <LabeledSwitch
+                              checked={project.auto_sync}
+                              onCheckedChange={(checked) => {
+                                updateProjectMutation.mutate({
+                                  projectId: project.id,
+                                  data: {
+                                    name: project.name,
+                                    description: project.description || '',
+                                    status: project.status,
+                                    s3_bucket: project.s3_bucket,
+                                    s3_prefix: project.s3_prefix,
+                                    file_count: project.file_count,
+                                    auto_sync: checked,
+                                  },
+                                });
+                              }}
+                              disabled={updateProjectMutation.isPending}
+                            />
+                          )}
+                        </TableCell>
                         <TableCell>
                           <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
+                            <DropdownMenuTrigger asChild className='hover:border-primary hover:border'>
                               <Button variant="ghost" size="icon">
                                 <MoreVertical className="h-4 w-4" />
                               </Button>

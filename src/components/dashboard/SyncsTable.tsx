@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import {
   Table,
   TableBody,
@@ -75,7 +75,7 @@ function formatIntegration(integration: string): string {
   return mapping[integration] || integration;
 }
 
-export function SyncsTable({ title = 'Sync Activity', defaultPageSize = 10 }: SyncsTableProps) {
+export function SyncsTable({ defaultPageSize = 10 }: SyncsTableProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState<SortOption>('desc');
@@ -158,7 +158,7 @@ export function SyncsTable({ title = 'Sync Activity', defaultPageSize = 10 }: Sy
   return (
     <Card className="bg-card rounded-2xl border border-border">
       <CardHeader>
-        <CardTitle>{title}</CardTitle>
+        {/* <CardTitle>{title}</CardTitle> */}
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="flex justify-between items-center gap-4 flex-wrap">
@@ -174,7 +174,7 @@ export function SyncsTable({ title = 'Sync Activity', defaultPageSize = 10 }: Sy
 
           <div className="flex gap-2 flex-wrap">
             <Select value={statusFilter} onValueChange={handleStatusFilterChange}>
-              <SelectTrigger className="w-[140px] bg-card rounded-full border border-border">
+              <SelectTrigger className="w-[140px] bg-card rounded-lg border border-border">
                 <SelectValue placeholder="Status" />
               </SelectTrigger>
               <SelectContent>
@@ -187,7 +187,7 @@ export function SyncsTable({ title = 'Sync Activity', defaultPageSize = 10 }: Sy
             </Select>
 
             <Select value={integrationFilter} onValueChange={handleIntegrationFilterChange}>
-              <SelectTrigger className="w-[140px] bg-card rounded-full border border-border">
+              <SelectTrigger className="w-[140px] bg-card rounded-lg border border-border">
                 <SelectValue placeholder="Integration" />
               </SelectTrigger>
               <SelectContent>
@@ -199,7 +199,7 @@ export function SyncsTable({ title = 'Sync Activity', defaultPageSize = 10 }: Sy
             </Select>
 
             <Select value={syncedFilter} onValueChange={handleSyncedFilterChange}>
-              <SelectTrigger className="w-[140px] bg-card rounded-full border border-border">
+              <SelectTrigger className="w-[140px] bg-card rounded-lg border border-border">
                 <SelectValue placeholder="Synced" />
               </SelectTrigger>
               <SelectContent>
@@ -210,7 +210,7 @@ export function SyncsTable({ title = 'Sync Activity', defaultPageSize = 10 }: Sy
             </Select>
 
             <Select value={sortBy} onValueChange={(value) => setSortBy(value as SortOption)}>
-              <SelectTrigger className="w-[140px] bg-card rounded-full border border-border">
+              <SelectTrigger className="w-[140px] bg-card rounded-lg border border-border">
                 <SelectValue placeholder="Sort" />
               </SelectTrigger>
               <SelectContent>
@@ -226,14 +226,14 @@ export function SyncsTable({ title = 'Sync Activity', defaultPageSize = 10 }: Sy
         )}
 
         {error && (
-          <div className="bg-red-500/20 border border-red-500/50 rounded-lg p-4 text-red-400 text-sm min-h-[350px] flex items-center justify-center">
+          <div className="bg-red-500/20 border border-red-500/50 rounded-2xl p-4 text-red-400 text-sm min-h-[350px] flex items-center justify-center">
             Failed to load syncs. Please try again.
           </div>
         )}
 
         {!isLoading && !error && (
           <>
-            <div className="rounded-md border">
+            <div className="rounded-2xl border">
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -280,7 +280,7 @@ export function SyncsTable({ title = 'Sync Activity', defaultPageSize = 10 }: Sy
                         <TableCell>{format(new Date(sync.created_at), 'dd/MM/yyyy HH:mm')}</TableCell>
                         <TableCell>
                           <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
+                            <DropdownMenuTrigger asChild className='hover:border-primary hover:border'>
                               <Button variant="ghost" size="icon">
                                 <MoreVertical className="h-4 w-4" />
                               </Button>

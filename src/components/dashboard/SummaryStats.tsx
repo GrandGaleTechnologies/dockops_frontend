@@ -1,9 +1,10 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { DateFilter } from '@/components/dashboard/DateFilter';
-import { RefreshCw, Folder, Link2, XCircle, CheckCircle2, ArrowUp } from 'lucide-react';
+import { RefreshCw, Folder } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useDashboardStats, Period } from '@/lib/api/dashboard';
 import { format } from 'date-fns';
+import { FailedSynIcon, IntegrationIcons, LastSyncIcon, PendingSyncIcon, SuccessfulSyncIcon, SyncIcon } from '@/assets/icon';
 
 interface StatCardProps {
 	icon: React.ReactNode;
@@ -26,6 +27,19 @@ function StatCard({ icon, label, value, className }: StatCardProps) {
 				<div className="absolute right-0 top-4 bottom-4 w-px bg-border/25" />
 			</CardContent>
 		</Card>
+	);
+}
+
+const IconWrapper = ({ icon }: { icon: React.ReactNode }) => {
+	return (
+		<div 
+			className="size-12 rounded-full bg-card p-3 flex items-center justify-center border border-border"
+			style={{
+				boxShadow: '1px 1px 4px 1px #FFFFFF inset, 0px 4px 4px 1px #FFFFFF26'
+			}}
+		>
+			{icon}
+		</div>
 	);
 }
 
@@ -78,7 +92,7 @@ export function SummaryStats({ period, onPeriodChange }: SummaryStatsProps) {
 					<h1 className="text-4xl font-bold text-white">Welcome Back</h1>
 					<DateFilter value={period} onChange={onPeriodChange} />
 				</div>
-				<div className="bg-red-500/20 border border-red-500/50 rounded-lg p-4 text-red-400">
+				<div className="bg-red-500/20 border border-red-500/50 rounded-2xl p-4 text-red-400">
 					Failed to load dashboard stats. Please try again.
 				</div>
 			</div>
@@ -94,42 +108,42 @@ export function SummaryStats({ period, onPeriodChange }: SummaryStatsProps) {
 
 			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 bg-card rounded-2xl p-4 border border-border">
 				<StatCard
-					icon={<RefreshCw className="h-6 w-6" />}
+					icon={<IconWrapper icon={<LastSyncIcon />} />}
 					label="Last Sync at"
 					value={stats.last_sync_at ? formatLastSyncDate(stats.last_sync_at) : '—'}
 				/>
 				<StatCard
-					icon={<RefreshCw className="h-6 w-6" />}
+					icon={<IconWrapper icon={<LastSyncIcon />} />}
 					label="Avg. Sync Duration"
 					value={formatDuration(stats.avg_sync_duration_ms)}
 				/>
 				<StatCard
-					icon={<RefreshCw className="h-6 w-6" />}
+					icon={<IconWrapper icon={<SyncIcon />} />}
 					label="No. of Syncs"
 					value={stats.total_syncs.toLocaleString()}
 				/>
 				<StatCard
-					icon={<Folder className="h-6 w-6" />}
+					icon={<IconWrapper icon={<Folder className="h-6 w-6" />} />}
 					label="No. of Projects"
 					value={stats.projects.toLocaleString()}
 				/>
 				<StatCard
-					icon={<Link2 className="h-6 w-6" />}
+					icon={<IconWrapper icon={<IntegrationIcons />} />}
 					label="No. of Integrations"
 					value={stats.no_of_integrations.toLocaleString()}
 				/>
 				<StatCard
-					icon={<ArrowUp className="h-6 w-6" />}
+					icon={<IconWrapper icon={<PendingSyncIcon />} />}
 					label="Pending Syncs"
 					value={stats.pending_syncs.toLocaleString()}
 				/>
 				<StatCard
-					icon={<XCircle className="h-6 w-6" />}
+					icon={<IconWrapper icon={<FailedSynIcon />} />}
 					label="Failed Syncs"
 					value={stats.failed_syncs.toLocaleString()}
 				/>
 				<StatCard
-					icon={<CheckCircle2 className="h-6 w-6" />}
+					icon={<IconWrapper icon={<SuccessfulSyncIcon />} />}
 					label="Successful Syncs"
 					value={stats.successful_syncs.toLocaleString()}
 				/>

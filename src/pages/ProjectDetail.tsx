@@ -64,7 +64,7 @@ const ProjectDetail = () => {
       <div className="min-h-screen bg-background">
         <Header />
         <div className="container mx-auto px-4 py-8">
-          <div className="bg-red-500/20 border border-red-500/50 rounded-lg p-4 text-red-400 text-sm">
+          <div className="bg-red-500/20 border border-red-500/50 rounded-2xl p-4 text-red-400 text-sm">
             Failed to load project details. Please try again.
           </div>
         </div>
@@ -185,7 +185,7 @@ const ProjectDetail = () => {
               )}
 
               {integrationsError && (
-                <div className="bg-red-500/20 border border-red-500/50 rounded-lg p-4 text-red-400 text-sm">
+                <div className="bg-red-500/20 border border-red-500/50 rounded-2xl p-4 text-red-400 text-sm">
                   Failed to load integrations. Please try again.
                 </div>
               )}
@@ -193,7 +193,7 @@ const ProjectDetail = () => {
               {!isLoadingIntegrations && !integrationsError && (
                 <>
                   {integrations && integrations.length > 0 ? (
-                    <div className="rounded-md border">
+                    <div className="rounded-2xl border">
                       <Table>
                         <TableHeader>
                           <TableRow>

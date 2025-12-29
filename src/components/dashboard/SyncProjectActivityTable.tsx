@@ -171,7 +171,7 @@ export function SyncProjectActivityTable() {
 					</Select>
 				</div>
 
-				<div className="rounded-md border">
+				<div className="rounded-2xl border">
 					<Table>
 						<TableHeader>
 							<TableRow>

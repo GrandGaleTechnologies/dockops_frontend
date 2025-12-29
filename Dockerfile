@@ -11,8 +11,8 @@ RUN yarn install --frozen-lockfile
 COPY . .
 
 # Accept Railway's env vars at build time
-ARG VITE_SERVER_API
-ENV VITE_SERVER_API=$VITE_SERVER_API
+ARG VITE_API_URL
+ENV VITE_API_URL=$VITE_API_URL
 
 # Build the Vite app
 RUN yarn run build

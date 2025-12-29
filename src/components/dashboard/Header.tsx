@@ -54,21 +54,22 @@ export function Header() {
 						<img src={logo} alt="AERIAL PROSPEX DOCK OPS" className="h-8 mr-4" />
 					</div>
 					<div className="flex gap-3">
-						<nav className="hidden items-center gap-2 md:flex">
-							{navItems.map((item) => (
-								<Link key={item.path} to={item.path}>
-									<Button
-										variant={location.pathname === item.path ? 'default' : 'ghost'}
-										className={cn(
-											location.pathname === item.path &&
-												'bg-primary hover:bg-primary/90'
-										)}
-									>
-										{item.label}
-									</Button>
-								</Link>
-							))}
-						</nav>
+					<nav className="hidden items-center gap-2 md:flex">
+						{navItems.map((item) => (
+							<Link key={item.path} to={item.path}>
+								<Button
+									variant={location.pathname === item.path ? 'default' : 'ghost'}
+									className={cn(
+										'rounded-full',
+										location.pathname === item.path &&
+											'bg-primary hover:bg-primary/90'
+									)}
+								>
+									{item.label}
+								</Button>
+							</Link>
+						))}
+					</nav>
 						<div className="flex items-center gap-4">
 							{/* Avatar - Hidden on mobile, shown on desktop */}
 							{user && (
@@ -126,7 +127,7 @@ export function Header() {
 														<Button
 															variant={location.pathname === item.path ? 'default' : 'ghost'}
 															className={cn(
-																'w-full justify-start',
+																'w-full justify-start rounded-full',
 																location.pathname === item.path && 'bg-primary hover:bg-primary/90'
 															)}
 														>
