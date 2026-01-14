@@ -5,9 +5,8 @@ import {
 	Drawer,
 	DrawerClose,
 	DrawerContent,
-	DrawerHeader,
-	DrawerTitle,
 	DrawerTrigger,
+	DrawerFooter,
 } from '@/components/ui/drawer';
 import {
 	Popover,
@@ -114,56 +113,54 @@ export function Header() {
 										<Menu className="h-5 w-5" />
 									</Button>
 								</DrawerTrigger>
-								<DrawerContent className="md:hidden p-4">
-									<DrawerHeader className="pb-2">
-										<DrawerTitle>Navigation</DrawerTitle>
-									</DrawerHeader>
-									<div className="flex flex-col gap-4">
-										{/* Navigation Items */}
-										<div className="grid gap-2">
-											{navItems.map((item) => (
-												<DrawerClose asChild key={item.path}>
-													<Link to={item.path}>
-														<Button
-															variant={location.pathname === item.path ? 'default' : 'ghost'}
+								<DrawerContent className="md:hidden flex flex-col h-full max-h-none">
+									{/* Navigation Items - Centered in upper half */}
+									<div className="flex-1 flex items-start justify-center pt-20 mt-16">
+										<div className="flex flex-col gap-6 px-4">
+											{navItems.map((item) => {
+												const isActive = location.pathname === item.path;
+												return (
+													<DrawerClose asChild key={item.path}>
+														<Link
+															to={item.path}
 															className={cn(
-																'w-full justify-start rounded-full',
-																location.pathname === item.path && 'bg-primary hover:bg-primary/90'
+																'text-lg font-medium transition-colors text-center',
+																isActive
+																	? 'text-primary'
+																	: 'text-muted-foreground hover:text-foreground'
 															)}
 														>
 															{item.label}
-														</Button>
-													</Link>
-												</DrawerClose>
-											))}
+														</Link>
+													</DrawerClose>
+												);
+											})}
 										</div>
-										{/* User Info and Logout - Mobile Only */}
-										{user && (
-											<>
-												<div className="border-t pt-4 mt-2">
-													<div className="flex items-center gap-3 mb-4">
-														<Avatar className="h-10 w-10">
-															<AvatarFallback className="bg-primary text-primary-foreground font-semibold">
-																{getUserInitial(user.full_name)}
-															</AvatarFallback>
-														</Avatar>
-														<div className="flex-1 min-w-0">
-															<p className="text-sm font-semibold truncate">{user.full_name}</p>
-															<p className="text-sm text-muted-foreground truncate">{user.email}</p>
-														</div>
-													</div>
-													<Button
-														variant="outline"
-														className="w-full justify-start"
-														onClick={handleLogout}
-													>
-														<LogOut className="mr-2 h-4 w-4" />
-														Logout
-													</Button>
-												</div>
-											</>
-										)}
 									</div>
+									{/* User Info and Logout - Fixed at bottom */}
+									{user && (
+										<DrawerFooter className="border-t pt-4 pb-6">
+											<div className="flex items-center gap-3 mb-4">
+												<Avatar className="h-10 w-10">
+													<AvatarFallback className="bg-primary text-primary-foreground font-semibold">
+														{getUserInitial(user.full_name)}
+													</AvatarFallback>
+												</Avatar>
+												<div className="flex-1 min-w-0">
+													<p className="text-sm font-semibold truncate">{user.full_name}</p>
+													<p className="text-sm text-muted-foreground truncate">{user.email}</p>
+												</div>
+											</div>
+											<Button
+												variant="outline"
+												className="w-full justify-start"
+												onClick={handleLogout}
+											>
+												<LogOut className="mr-2 h-4 w-4" />
+												Logout
+											</Button>
+										</DrawerFooter>
+									)}
 								</DrawerContent>
 							</Drawer>
 						</div>

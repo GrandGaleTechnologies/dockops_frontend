@@ -107,7 +107,7 @@ const Login = () => {
 									Remember Me
 								</Label>
 							</div>
-							<a
+							{/* <a
 								href="#"
 								className="text-white text-sm hover:text-primary transition-colors"
 								onClick={(e) => {
@@ -116,7 +116,7 @@ const Login = () => {
 								}}
 							>
 								Forgot password?
-							</a>
+							</a> */}
 						</div>
 
 						{/* Sign In Button */}

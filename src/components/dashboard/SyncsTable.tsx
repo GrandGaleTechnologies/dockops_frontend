@@ -26,10 +26,9 @@ import {
   PaginationPrevious,
 } from '@/components/ui/pagination';
 import { Badge } from '@/components/ui/badge';
-import { MoreVertical, Search } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { useSyncs, useTriggerManualSync, useDeleteSync, SyncsQueryParams } from '@/lib/api/syncs';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../ui/dropdown-menu';
-import { Button } from '../ui/button';
+import { TableActionsDropdown } from '@/components/ui/table-actions-dropdown';
 import { format } from 'date-fns';
 import { getSyncStatusBadge } from '@/lib/projectUtils';
 import { SyncDetailModal } from './SyncDetailModal';
@@ -161,8 +160,8 @@ export function SyncsTable({ defaultPageSize = 10 }: SyncsTableProps) {
         {/* <CardTitle>{title}</CardTitle> */}
       </CardHeader>
       <CardContent className="space-y-4">
-        <div className="flex justify-between items-center gap-4 flex-wrap">
-          <div className="relative flex-1 max-w-sm">
+        <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+          <div className="relative flex-1 w-full md:max-w-sm">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-4 w-4" />
             <Input
               placeholder="Search syncs"
@@ -172,9 +171,9 @@ export function SyncsTable({ defaultPageSize = 10 }: SyncsTableProps) {
             />
           </div>
 
-          <div className="flex gap-2 flex-wrap">
+          <div className="flex gap-2 w-full md:w-auto">
             <Select value={statusFilter} onValueChange={handleStatusFilterChange}>
-              <SelectTrigger className="w-[140px] bg-card rounded-lg border border-border">
+              <SelectTrigger className="w-full md:w-[140px] bg-card rounded-lg border border-border">
                 <SelectValue placeholder="Status" />
               </SelectTrigger>
               <SelectContent>
@@ -187,7 +186,7 @@ export function SyncsTable({ defaultPageSize = 10 }: SyncsTableProps) {
             </Select>
 
             <Select value={integrationFilter} onValueChange={handleIntegrationFilterChange}>
-              <SelectTrigger className="w-[140px] bg-card rounded-lg border border-border">
+              <SelectTrigger className="w-full md:w-[140px] bg-card rounded-lg border border-border">
                 <SelectValue placeholder="Integration" />
               </SelectTrigger>
               <SelectContent>
@@ -199,7 +198,7 @@ export function SyncsTable({ defaultPageSize = 10 }: SyncsTableProps) {
             </Select>
 
             <Select value={syncedFilter} onValueChange={handleSyncedFilterChange}>
-              <SelectTrigger className="w-[140px] bg-card rounded-lg border border-border">
+              <SelectTrigger className="w-full md:w-[140px] bg-card rounded-lg border border-border">
                 <SelectValue placeholder="Synced" />
               </SelectTrigger>
               <SelectContent>
@@ -210,7 +209,7 @@ export function SyncsTable({ defaultPageSize = 10 }: SyncsTableProps) {
             </Select>
 
             <Select value={sortBy} onValueChange={(value) => setSortBy(value as SortOption)}>
-              <SelectTrigger className="w-[140px] bg-card rounded-lg border border-border">
+              <SelectTrigger className="w-full md:w-[140px] bg-card rounded-lg border border-border">
                 <SelectValue placeholder="Sort" />
               </SelectTrigger>
               <SelectContent>
@@ -279,40 +278,33 @@ export function SyncsTable({ defaultPageSize = 10 }: SyncsTableProps) {
                         </TableCell>
                         <TableCell>{format(new Date(sync.created_at), 'dd/MM/yyyy HH:mm')}</TableCell>
                         <TableCell>
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild className='hover:border-primary hover:border'>
-                              <Button variant="ghost" size="icon">
-                                <MoreVertical className="h-4 w-4" />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                              <DropdownMenuItem
-                                onClick={() => {
+                          <TableActionsDropdown
+                            actions={[
+                              {
+                                label: 'View Details',
+                                onClick: () => {
                                   setSelectedSyncId(sync.id);
                                   setIsModalOpen(true);
-                                }}
-                              >
-                                View Details
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                onClick={() => {
+                                },
+                              },
+                              {
+                                label: 'Trigger Manual Sync',
+                                onClick: () => {
                                   triggerManualSyncMutation.mutate(sync.id);
-                                }}
-                                disabled={triggerManualSyncMutation.isPending}
-                              >
-                                {triggerManualSyncMutation.isPending ? 'Triggering...' : 'Trigger Manual Sync'}
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                className="text-red-500"
-                                onClick={() => {
+                                },
+                                disabled: triggerManualSyncMutation.isPending,
+                                loading: triggerManualSyncMutation.isPending,
+                              },
+                              {
+                                label: 'Delete',
+                                onClick: () => {
                                   setDeleteSyncId(sync.id);
                                   setIsDeleteDialogOpen(true);
-                                }}
-                              >
-                                Delete
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
+                                },
+                                destructive: true,
+                              },
+                            ]}
+                          />
                         </TableCell>
                       </TableRow>
                     ))

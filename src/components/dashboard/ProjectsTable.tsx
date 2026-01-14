@@ -26,10 +26,9 @@ PaginationNext,
 PaginationPrevious,
 } from '@/components/ui/pagination';
 import { LabeledSwitch } from '@/components/ui/labeled-switch';
-import { MoreVertical, Search } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { useProjects, useUpdateProjectStatus, useDeleteProject, useUpdateProject } from '@/lib/api/projects';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../ui/dropdown-menu';
-import { Button } from '../ui/button';
+import { TableActionsDropdown } from '@/components/ui/table-actions-dropdown';
 import { formatDate } from 'date-fns';
 import { useNavigate } from 'react-router';
 import { CreateProjectModal } from './CreateProjectModal';
@@ -133,8 +132,8 @@ return (
       <CardHeader>
       </CardHeader>
       <CardContent className="space-y-4">
-        <div className="flex justify-between items-center gap-4">
-          <div className="relative flex-1 max-w-sm">
+        <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+          <div className="relative flex-1 w-full md:max-w-sm">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-4 w-4" />
             <Input
               placeholder="Search by Project Name"
@@ -144,9 +143,9 @@ return (
             />
           </div>
 
-          <div className="flex gap-2">
+          <div className="flex gap-2 w-full md:w-auto">
             <Select value={autoSyncFilter === undefined ? 'all' : String(autoSyncFilter)} onValueChange={handleAutoSyncFilterChange}>
-              <SelectTrigger className="w-[140px] bg-card rounded-lg border border-border">
+              <SelectTrigger className="w-full md:w-[140px] bg-card rounded-lg border border-border">
                 <SelectValue placeholder="Auto Sync" />
               </SelectTrigger>
               <SelectContent>
@@ -157,7 +156,7 @@ return (
             </Select>
 
             <Select value={sortBy} onValueChange={(value) => setSortBy(value as SortOption)}>
-              <SelectTrigger className="w-[140px] bg-card rounded-lg border border-border">
+              <SelectTrigger className="w-full md:w-[140px] bg-card rounded-lg border border-border">
                 <SelectValue placeholder="Sort" />
               </SelectTrigger>
               <SelectContent>
@@ -242,58 +241,49 @@ return (
                           )}
                         </TableCell>
                         <TableCell>
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild className='hover:border-primary hover:border'>
-                              <Button variant="ghost" size="icon">
-                                <MoreVertical className="h-4 w-4" />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                              <DropdownMenuItem
-                                onClick={() => {
+                          <TableActionsDropdown
+                            actions={[
+                              {
+                                label: 'View Details',
+                                onClick: () => {
                                   navigate(`/projects/${project.id}`);
-                                }}
-                              >
-                                View Details
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                onClick={() => {
+                                },
+                              },
+                              {
+                                label: 'Edit Project',
+                                onClick: () => {
                                   setEditProject(project);
                                   setIsEditModalOpen(true);
-                                }}
-                              >
-                                Edit Project
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                onClick={() => {
+                                },
+                              },
+                              {
+                                label: project.status === 'active' ? 'Deactivate' : 'Activate',
+                                onClick: () => {
                                   updateStatusMutation.mutate({
                                     projectId: project.id,
                                     status: project.status === 'active' ? 'inactive' : 'active',
                                   });
-                                }}
-                                disabled={updateStatusMutation.isPending}
-                              >
-                                {project.status === 'active' ? 'Deactivate' : 'Activate'}
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                onClick={() => {
+                                },
+                                disabled: updateStatusMutation.isPending,
+                                loading: updateStatusMutation.isPending,
+                              },
+                              {
+                                label: 'Manage Integrations',
+                                onClick: () => {
                                   setManageIntegrationsProject(project);
                                   setIsManageIntegrationsModalOpen(true);
-                                }}
-                              >
-                                Manage Integrations
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                className="text-red-500"
-                                onClick={() => {
+                                },
+                              },
+                              {
+                                label: 'Delete Project',
+                                onClick: () => {
                                   setDeleteProjectId(project.id);
                                   setIsDeleteDialogOpen(true);
-                                }}
-                              >
-                                Delete Project
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
+                                },
+                                destructive: true,
+                              },
+                            ]}
+                          />
                         </TableCell>
                       </TableRow>
                     ))
